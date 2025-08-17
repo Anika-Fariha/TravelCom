@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', // Assuming you have a role column for user roles
     ];
 
     /**
@@ -45,4 +46,37 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function sentRequests()
+    {
+        return $this->hasMany(Friendship::class, 'user_id');
+    }
+
+    public function receivedRequests()
+    {
+        return $this->hasMany(Friendship::class, 'friend_id');
+    }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+                    ->wherePivot('status', 'accepted');
+    }
+
+    public function pendingFriends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+                    ->wherePivot('status', 'pending');
+    }
+
+    // User model (User.php)
+    public function itineraries()
+    {
+        return $this->hasMany(Itinerary::class);
+    }
+    public function sharedItineraries()
+    {
+        return $this->belongsToMany(Itinerary::class, 'shared_itineraries')->withTimestamps();
+    }
+
 }
