@@ -14,6 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+        // Ensure the user is authenticated before accessing this controller
         $this->middleware('auth');
     }
 
@@ -22,12 +23,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    //public function index()
-    ////{
-        //$countries = Country::select()->orderBy('id', 'desc')->get();
-        //return view('home', compact('countries'));
-    //}
+    public function index()
+    {
+        // Fetch countries from the database, ordered by ID in descending order
+        $countries = Country::orderBy('id', 'desc')->get();
+
+        // Return the 'home' view and pass the countries data to it
+        return view('home', compact('countries'));
+    }
 }
-// $countries = DB::table('countries')->orderBy('id', 'desc')->get();
-// OR
-// $countries = Country::orderBy('id', 'desc')->get();
