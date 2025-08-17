@@ -72,6 +72,9 @@ use App\Http\Controllers\GroupTripController;
 Route::prefix('group-trips')->group(function () {
     Route::get('index', [GroupTripController::class, 'index'])->name('group_trips.index'); // Define the route for the index
     Route::get('create', [GroupTripController::class, 'create'])->name('group_trips.create');
+    Route::get('{id}/edit', [GroupTripController::class, 'edit'])->name('group_trips.edit');
+    Route::put('{id}', [GroupTripController::class, 'update'])->name('group_trips.update');
+    Route::delete('{id}', [GroupTripController::class, 'destroy'])->name('group_trips.destroy');
     Route::post('store', [GroupTripController::class, 'store'])->name('group_trips.store');
     Route::get('{id}', [GroupTripController::class, 'show'])->name('group_trips.show');  // Add this route
     Route::get('{id}/send-invitations', [GroupTripController::class, 'sendInvitations'])->name('group_trips.sendInvitations');

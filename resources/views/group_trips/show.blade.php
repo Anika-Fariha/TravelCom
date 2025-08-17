@@ -14,6 +14,17 @@
         </div>
     </div>
 
+    <!-- Edit and Delete Buttons -->
+    <div class="text-center">
+        <a href="{{ route('group_trips.edit', $groupTrip->id) }}" class="btn btn-warning btn-lg">Edit Group Trip</a>
+        
+        <form action="{{ route('group_trips.destroy', $groupTrip->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-lg" onclick="return confirm('Are you sure you want to delete this group trip?')">Delete Group Trip</button>
+        </form>
+    </div>
+
     <!-- Invitations Section -->
     <h3>Invitations</h3>
     @if($groupTrip->invitations->isEmpty())

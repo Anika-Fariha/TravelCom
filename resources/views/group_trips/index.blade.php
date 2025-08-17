@@ -4,7 +4,7 @@
 <div class="container py-5">
     <h1 class="text-center mb-4">My Group Trips</h1>
 
-        <!-- Button to Create New trip -->
+    <!-- Button to Create New trip -->
     <div class="text-center mb-4">
         <a href="{{ route('group_trips.create') }}" class="btn btn-primary btn-lg">Create New Group Trip</a>
     </div>
@@ -21,15 +21,26 @@
                             <p class="card-text">Destination: {{ $groupTrip->destination }}</p>
                             <p class="card-text">From: {{ \Carbon\Carbon::parse($groupTrip->start_date)->format('F d, Y') }} to {{ \Carbon\Carbon::parse($groupTrip->end_date)->format('F d, Y') }}</p>
                             <a href="{{ route('group_trips.show', $groupTrip->id) }}" class="btn btn-info btn-sm">View</a>
-                            
+
+                            <!-- Edit Button -->
+                            <a href="{{ route('group_trips.edit', $groupTrip->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                            <!-- Delete Button -->
+                            <form action="{{ route('group_trips.destroy', $groupTrip->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this group trip?')">Delete</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
     @endif
+</div>
 
-    <!-- Accepted Group Trips Section -->
+<!-- Accepted Group Trips Section -->
+<div class="container py-5">
     <h1 class="text-center mb-4">Accepted Group Trips</h1>
     @if($acceptedGroupTrips->isEmpty())
         <p class="text-center">You haven't accepted any group trip invitations yet.</p>
@@ -50,15 +61,18 @@
             @endforeach
         </div>
     @endif
+</div>
 
+<!-- Group Trip Invitations -->
+<div class="container py-5">
     <h1 class="text-center mb-4">Group Trip Invitations</h1>
 
     @if($invitations->isEmpty())
         <p class="text-center">You have no pending invitations.</p>
     @else
-        <div class="row">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             @foreach($invitations as $invitation)
-                <div class="col-md-4">
+                <div class="col">
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">{{ $invitation->groupTrip->name }}</h5>
@@ -83,4 +97,5 @@
         </div>
     @endif
 </div>
+
 @endsection
