@@ -1,34 +1,26 @@
-# Use official PHP image with Apache
-FROM php:8.2-apache
+# Stage 1: Build PHP dependencies
+FROM php:8.2-apache as php-base
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev \
-    zip \
-    unzip \
-    git \
-    curl \
+    libzip-dev zip unzip git curl nodejs npm \
     && docker-php-ext-install pdo_mysql zip
 
-# Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Copy project files
 COPY . .
 
-# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
+# Stage 2: Build frontend with Node/Vite
+RUN npm install && npm run build
+
+# Fix permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# ⚡ FIX: Point Apache to Laravel's public folder
+# Point Apache to Laravel /public
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
@@ -37,8 +29,5 @@ RUN echo '<VirtualHost *:80>\n\
     </Directory>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
-# Expose port 80
 EXPOSE 80
-
-# Start Apache
 CMD ["apache2-foreground"]
