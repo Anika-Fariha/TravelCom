@@ -1,50 +1,34 @@
-# ===============================
-# Laravel + Vite Dockerfile
-# ===============================
-
-# 1️⃣ Base PHP image
+# Base image
 FROM php:8.2-fpm
 
-# 2️⃣ Install system dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    curl \
-    libzip-dev \
-    npm \
-    nodejs \
-    && docker-php-ext-install pdo_mysql zip \
-    && rm -rf /var/lib/apt/lists/*
+    git unzip curl libzip-dev zip nodejs npm
 
-# 3️⃣ Set working directory
-WORKDIR /var/www/html
-
-# 4️⃣ Copy app source files
-COPY . .
-
-# 5️⃣ Install Composer
+# Install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN rm composer-setup.php
 
-# 6️⃣ Install PHP dependencies (skip scripts to avoid artisan errors)
-RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
+# Set working directory
+WORKDIR /var/www/html
 
-# 7️⃣ Optional: Clear caches manually
-RUN php artisan config:clear || true
-RUN php artisan cache:clear || true
-RUN php artisan route:clear || true
-RUN php artisan view:clear || true
+# Copy project files
+COPY . .
 
-# 8️⃣ Install Node dependencies & build assets (skip Sass completely)
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Install Node dependencies
 RUN npm install
+
+# Build JS assets only
 RUN npm run build
 
-# 9️⃣ Set permissions for storage & cache
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# 🔟 Expose port 9000 for PHP-FPM
+# Expose port
 EXPOSE 9000
 
-# 1️⃣1️⃣ Run PHP-FPM
 CMD ["php-fpm"]

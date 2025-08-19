@@ -29,7 +29,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito&display=swap" rel="stylesheet">
 
     <!-- Vite (compiled CSS/JS) -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
 </head>
 <body>
     <div id="app">
