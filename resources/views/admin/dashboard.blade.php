@@ -39,7 +39,7 @@
         </div>
         
         <div class="col-md-4">
-            <div class="card shadow-sm">
+            <div class="mt-4 card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">View Group Trips</h5>
                     <p class="card-text">View all group trips created by users.</p>
