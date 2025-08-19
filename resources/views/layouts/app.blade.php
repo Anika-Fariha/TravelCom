@@ -28,8 +28,7 @@
     <!-- Fonts (with swap to prevent CLS) -->
     <link href="https://fonts.bunny.net/css?family=Nunito&display=swap" rel="stylesheet">
 
-    <!-- Vite (compiled CSS/JS) -->
-    @vite(['resources/js/app.js'])
+    
 </head>
 <body>
     <div id="app">
