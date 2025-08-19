@@ -115,5 +115,37 @@ Route::middleware('auth')->get('/admin/notifications', [AdminController::class, 
 //Route to view notifications on user side
 Route::middleware('auth')->get('/notifications', [NotificationController::class, 'userNotifications'])->name('user.notifications');
 
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\RecommendationController;
+
+Route::middleware(['auth'])->group(function () {
+    // Posts
+    Route::get('/posts', [PostController::class,'index'])->name('posts.index');
+    Route::post('/posts', [PostController::class,'store'])->name('posts.store');
+    Route::delete('/posts/{post}', [PostController::class,'destroy'])->name('posts.destroy');
+
+    // Likes
+    Route::post('/posts/{post}/like', [LikeController::class,'toggle'])->name('posts.like');
+
+    // Comments
+    Route::post('/posts/{post}/comments', [CommentController::class,'store'])->name('posts.comments.store');
+    Route::delete('/comments/{comment}', [CommentController::class,'destroy'])->name('comments.destroy');
+
+    // Activity
+    Route::get('/activity/liked', [ActivityController::class,'likedPosts'])->name('activity.liked');
+    Route::get('/activity/commented', [ActivityController::class,'commentedPosts'])->name('activity.commented');
+
+    // Recommendations
+    Route::get('/recommendations/create', [RecommendationController::class,'create'])->name('recommendations.create');
+    Route::post('/recommendations', [RecommendationController::class,'store'])->name('recommendations.store');
+    Route::get('/recommendations', [RecommendationController::class,'index'])->name('recommendations.index');
+    Route::patch('/recommendations/{recommendation}/read', [RecommendationController::class,'markAsRead'])->name('recommendations.read');
+});
+
+
+
 
 

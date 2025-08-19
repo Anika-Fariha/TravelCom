@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-5">
     <!-- Itinerary Title -->
-    <h1 class="display-4 font-weight-bold text-dark text-center mb-5">{{ $itinerary->destination }} Itinerary</h1>
+    <h1 class="display-4 font-weight-bold text-white text-center mb-5">My Itinerary</h1>
 
     <!-- Itinerary Information Card -->
     <div class="card shadow-lg rounded-lg mb-5">
@@ -20,7 +20,7 @@
     </div>
 
     <!-- City Stops Section -->
-    <h3 class="h4 font-weight-bold text-dark mb-4">City Stops</h3>
+    <h3 class="h4 font-weight-bold text-white mb-4">City Stops</h3>
     
     @if($itinerary->cityStops->isEmpty())
         <div class="alert alert-info text-center">
@@ -41,40 +41,5 @@
             @endforeach
         </ul>
     @endif
-
-    <!-- Share Button (Multi-Select) -->
-    <!-- Share Button (Email) -->
-    <h3 class="h4 font-weight-bold text-dark text-center mt-5 mb-4">Share this itinerary with friends</h3>
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm rounded-3 p-4">
-                <form action="{{ route('itineraries.share', ['itinerary_id' => $itinerary->id]) }}" method="POST">
-                    @csrf
-                    <!-- Friend Selection -->
-                    <div class="mb-3">
-                        <label for="friend_id" class="form-label">Select a Friend</label>
-                        <select name="friend_id" id="friend_id" class="form-select form-select-lg @error('friend_id') is-invalid @enderror" required>
-                            <option value="" disabled selected>Select a friend</option>
-                            @foreach($friends as $friend)
-                                <option value="{{ $friend->id }}">{{ $friend->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('friend_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary w-100 py-2">Share Itinerary</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Button Section -->
-    <div class="text-center mt-4">
-        <a href="{{ route('itineraries.index') }}" class="btn btn-secondary btn-lg px-4 py-2">Back to Itineraries</a>
-    </div>
-</div>
 
 @endsection

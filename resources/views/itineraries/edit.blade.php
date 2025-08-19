@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 font-weight-bold text-dark">Edit Itinerary</h1>
+        <h1 class="display-4 font-weight-bold text-white">Edit Itinerary</h1>
     </div>
 
     <div class="card shadow-sm rounded-lg">

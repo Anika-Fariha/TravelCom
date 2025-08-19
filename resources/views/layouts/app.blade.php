@@ -7,7 +7,12 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'TravelCom') }}</title>
+
+    <!-- Preconnect for faster external loads -->
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -17,34 +22,30 @@
     <link rel="stylesheet" href="{{ asset('assets/css/templatemo-woox-travel.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/owl.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
-    <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <!-- Fonts (with swap to prevent CLS) -->
+    <link href="https://fonts.bunny.net/css?family=Nunito&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
+    <!-- Vite (compiled CSS/JS) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
     <div id="app">
-        
 
         <!-- ***** Header Area Start ***** -->
         <header class="header-area header-sticky">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                    <nav class="main-nav">
-                            <!-- ***** Logo Start ***** -->
-                            <!--<a href="{{ url('/') }}" class="logo">
-                                <img src="{{ asset('assets/images/logo.png') }}" alt="">
-                            </a>-->
-                            <h1><a href="{{ url('/') }}"><span class="logo" style="color:rgb(255, 255, 255);">TravelCom</span></a></h1>
-                            <!-- ***** Logo End ***** -->
-                            <!-- ***** Menu Start ***** -->
+                        <nav class="main-nav">
+                            <h1>
+                                <a href="{{ url('/') }}">
+                                    <span class="logo" style="color:white;">TravelCom</span>
+                                </a>
+                            </h1>
                             <ul class="nav">
-                                
                                 @guest
                                     @if (Route::has('login'))
                                         <li><a href="{{ route('login') }}">Login</a></li>
@@ -53,110 +54,76 @@
                                         <li><a href="{{ route('register') }}">Register</a></li>
                                     @endif
                                 @else
-                                    
-                                        @auth
-                                            @if (Auth::user()->role == 1) <!-- Check if the user is an admin -->
-                                                <li><a href="{{ route('admin.dashboard') }}">Hi, {{ Auth::user()->name }}!</a></li>
-                                                <li><a href="{{ route('admin.notifications.index') }}">Notifications</a></li>
-                                            
-                                            @else
-                                                <li><a href="{{ route('home') }}">Hi, {{ Auth::user()->name }}!</a></li>
-                                                <li><a href="{{ route('friends.index') }}">Friends</a></li>
-                                                <li><a href="{{ route('itineraries.index')}}">Itineraries</a></li>
-                                                <li><a href="{{ route('group_trips.index') }}">Group Trips</a></li>
-                                                <li><a href="{{ route('user.notifications') }}">Notifications</a></li>
-                                            @endif
-                                        @endauth
-                                    
-
-                                    <!--<li class="nav-item dropdown">
-                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                            Hi, {{ Auth::user()->name }}!
-                                        </a>
-
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                            document.getElementById('logout-form').submit();">
-                                                {{ __('Logout') }}
-                                            </a>
-
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                @csrf
-                                            </form>
-                                        </div>
-                                    </li>-->
+                                    @auth
+                                        @if (Auth::user()->role == 1)
+                                            <li><a href="{{ route('admin.dashboard') }}">Hi, {{ Auth::user()->name }}!</a></li>
+                                            <li><a href="{{ route('admin.notifications.index') }}">Notifications</a></li>
+                                        @else
+                                            <li><a href="{{ route('home') }}">Hi, {{ Auth::user()->name }}!</a></li>
+                                            <li><a href="{{ route('friends.index') }}">Friends</a></li>
+                                            <li><a href="{{ route('itineraries.index') }}">Itineraries</a></li>
+                                            <li><a href="{{ route('group_trips.index') }}">Group Trips</a></li>
+                                            <li><a href="{{ route('user.notifications') }}">Notifications</a></li>
+                                        @endif
+                                    @endauth
                                     <li>
-                                        <a  href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                            document.getElementById('logout-form').submit();">
-                                                {{ __('Logout') }}
+                                        <a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
                                         </a>
-
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                @csrf
-                                            </form>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
                                     </li>
                                 @endguest
-                            </ul>   
-                            <a class='menu-trigger'>
-                                <span>Menu</span>
-                            </a>
-                            <!-- ***** Menu End ***** -->
+                            </ul>
+                            <a class='menu-trigger'><span>Menu</span></a>
                         </nav>
-                            
                     </div>
                 </div>
             </div>
         </header>
         <!-- ***** Header Area End ***** -->
 
-        <main class="py-4">
+        <!-- Pico Navigation for Post-related Features -->
+        <nav class="container mt-3">
+            <ul>
+                <li><strong>TravelCom</strong></li>
+            </ul>
+            <ul>
+                <li><a href="{{ route('posts.index') }}">Posts</a></li>
+                <li><a href="{{ route('activity.liked') }}">Liked</a></li>
+                <li><a href="{{ route('activity.commented') }}">Commented</a></li>
+                <li><a href="{{ route('recommendations.create') }}">Recommend</a></li>
+                <li><a href="{{ route('recommendations.index') }}">Inbox</a></li>
+            </ul>
+        </nav>
+
+        <main class="py-4 container">
+            @if(session('success'))
+                <article class="contrast">{{ session('success') }}</article>
+            @endif
             @yield('content')
         </main>
     </div>
 
     <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                
-                <br>Design: <a href="https://templatemo.com" target="_blank" title="free CSS templates">TemplateMo</a> Distribution: <a href="https://themewagon.com target="_blank" >ThemeWagon</a></p>
-                </div>
-            </div>
+        <div class="container text-center mt-4">
+            <p>
+                Design: <a href="https://templatemo.com" target="_blank">TemplateMo</a> | 
+                Distribution: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+            </p>
         </div>
     </footer>
 
-
     <!-- Bootstrap core JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <!-- <script src="https://unpkg.com/@popperjs/core@2"></script> 
-
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>-->
-
-    <script src="{{ asset('assets/js/isotope.min.js') }}"></script>
-    <script src="{{ asset('assets/js/owl-carousel.js') }}"></script>
-    <script src="{{ asset('assets/js/wow.js') }}"></script>
-    <script src="{{ asset('assets/js/tabs.js') }}"></script>
-    <script src="{{ asset('assets/js/popup.js') }}"></script>
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
-
-    <script>
-        function bannerSwitcher() {
-        next = $('.sec-1-input').filter(':checked').next('.sec-1-input');
-        if (next.length) next.prop('checked', true);
-        else $('.sec-1-input').first().prop('checked', true);
-        }
-
-        var bannerTimer = setInterval(bannerSwitcher, 5000);
-
-        $('nav .controls label').click(function() {
-        clearInterval(bannerTimer);
-        bannerTimer = setInterval(bannerSwitcher, 5000)
-        });
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}" defer></script>
+    <script src="{{ asset('assets/js/isotope.min.js') }}" defer></script>
+    <script src="{{ asset('assets/js/owl-carousel.js') }}" defer></script>
+    <script src="{{ asset('assets/js/wow.js') }}" defer></script>
+    <script src="{{ asset('assets/js/tabs.js') }}" defer></script>
+    <script src="{{ asset('assets/js/popup.js') }}" defer></script>
+    <script src="{{ asset('assets/js/custom.js') }}" defer></script>
 </body>
 </html>

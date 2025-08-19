@@ -2,13 +2,77 @@
 
 @section('content')
 
+<!-- ***** Dashboard Section ***** -->
+<section id="dashboard-section" class="position-relative" style="margin-top:100px; min-height:600px;">
+    
 
-  <!-- ***** Main Banner Area Start ***** -->
+    <div class="container my-5 position-relative" style="z-index:1;">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm" style="background-color: rgba(255,255,255,0.85);">
+                    <div class="card-body text-center">
+                        <h2 class="mb-4">Your TravelCom Dashboard</h2>
+                        <div class="row g-4">
+                            <!-- Dashboard Cards -->
+                            <div class="col-md-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">📌 Posts</h5>
+                                        <p class="card-text">Share your travel stories & view posts from others.</p>
+                                        <a href="{{ route('posts.index') }}" class="btn btn-primary">Go to Posts</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">❤️ Liked</h5>
+                                        <p class="card-text">See posts you have liked during your journey.</p>
+                                        <a href="{{ route('activity.liked') }}" class="btn btn-danger">View Likes</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">💬 Commented</h5>
+                                        <p class="card-text">Track your activity on posts you’ve commented on.</p>
+                                        <a href="{{ route('activity.commented') }}" class="btn btn-secondary">View Comments</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">✨ Recommend</h5>
+                                        <p class="card-text">Send travel recommendations to your friends.</p>
+                                        <a href="{{ route('recommendations.create') }}" class="btn btn-success">Make a Recommendation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">📥 Inbox</h5>
+                                        <p class="card-text">Check travel tips and recommendations sent to you.</p>
+                                        <a href="{{ route('recommendations.index') }}" class="btn btn-info">View Inbox</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End Dashboard Box -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ***** Main Banner Area Start ***** -->
   <section id="section-1">
     <div class="content-slider">
-      @foreach ($countries as $country)
-        
-        <input type="radio" id="banner{{ $country->id }}" class="sec-1-input" name="banner" checked>
+      @foreach ($countries as $i => $country)
+        <!-- Use 'checked' only on the first input to show the first image -->
+        <input type="radio" id="banner{{ $country->id }}" class="sec-1-input" name="banner" @if($i === 0) checked @endif>
       @endforeach
       
       <div class="slider">
@@ -50,7 +114,6 @@
             </div>
           </div>
         @endforeach
-        
       </div>
       <nav>
         <div class="controls">
@@ -68,8 +131,8 @@
       <div class="row">
         <div class="col-lg-5">
           <div class="section-heading">
-            <h2>Visit One Of Our Countries Now</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+            <h2 class="display-4 font-weight-bold text-white">Visit One Of Our Countries Now</h2>
+            
           </div>
         </div>
       </div>
@@ -83,7 +146,7 @@
                     <div class="row">
                       <div class="col-lg-4 col-sm-5">
                         <div class="image">
-                          <img src="{{ asset('assets/images/' . $country->image) }}" alt="">
+                          <img src="{{ asset('assets/images/' . $country->image) }}" alt="{{ $country->name }}">
                         </div>
                       </div>
                       <div class="col-lg-8 col-sm-7">
@@ -96,7 +159,7 @@
                           <p>{{ $country->description }}</p>
                           <ul class="info">
                             <li><i class="fa fa-user"></i> {{ $country->population }} Mil People</li>
-                            <li><i class="fa fa-globe"></i> {{ $country->area }} km2</li>
+                            <li><i class="fa fa-globe"></i> {{ $country->area }} km²</li>
                             <li><i class="fa fa-home"></i> ${{ $country->price }}</li>
                           </ul>
                           <div class="text-button">
@@ -108,7 +171,6 @@
                   </div>
                 </div>
               @endforeach
-              
             </div>
           </div>
         </div>

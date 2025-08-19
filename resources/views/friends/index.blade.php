@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 font-weight-bold text-dark">My Friends</h1>
+        <h1 class="display-4 font-weight-bold text-white">My Friends</h1>
         
     </div>
 
@@ -32,7 +32,7 @@
         </div>
     @else
         <div class="mb-5">
-            <h3 class="h4 font-weight-semibold text-dark mb-4">My Friends List</h3>
+            
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 @foreach($friends as $friend)
                     <div class="col">

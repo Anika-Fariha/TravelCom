@@ -1,11 +1,26 @@
+/* Import TailwindCSS */
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* Blade view sources for Laravel */
 
-@theme {
+/* Tailwind custom font configuration with font-display: swap; */
+:root {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Add font-face for custom fonts with font-display: swap; */
+@font-face {
+    font-family: 'Instrument Sans'; /* Name of your custom font */
+    src: url('../fonts/instrument-sans.woff2') format('woff2'),
+         url('../fonts/instrument-sans.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Ensures the fallback font is shown until the custom font is ready */
+}
+
+/* Ensure all body text uses the custom font */
+body {
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    font-display: swap; /* This is applied globally to avoid FOUT/FOIT */
 }

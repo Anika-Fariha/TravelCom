@@ -79,4 +79,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Itinerary::class, 'shared_itineraries')->withTimestamps();
     }
 
+
+    public function posts() { return $this->hasMany(\App\Models\Post::class); }
+    public function likes() { return $this->hasMany(\App\Models\Like::class); }
+    public function comments() { return $this->hasMany(\App\Models\Comment::class); }
+    public function sentRecommendations() { return $this->hasMany(\App\Models\Recommendation::class, 'sender_id'); }
+    public function receivedRecommendations() { return $this->hasMany(\App\Models\Recommendation::class, 'receiver_id'); }
+
 }

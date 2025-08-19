@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container py-5">
-    <h1 class="text-center mb-4">My Group Trips</h1>
+    <h1 class="display-4 font-weight-bold text-white text-center mb-4">My Group Trips</h1>
 
     <!-- Button to Create New trip -->
     <div class="text-center mb-4">
@@ -41,7 +41,7 @@
 
 <!-- Accepted Group Trips Section -->
 <div class="container py-5">
-    <h1 class="text-center mb-4">Accepted Group Trips</h1>
+    <h1 class="display-4 font-weight-bold text-white text-center mb-4">Accepted Group Trips</h1>
     @if($acceptedGroupTrips->isEmpty())
         <p class="text-center">You haven't accepted any group trip invitations yet.</p>
     @else
@@ -65,7 +65,7 @@
 
 <!-- Group Trip Invitations -->
 <div class="container py-5">
-    <h1 class="text-center mb-4">Group Trip Invitations</h1>
+    <h1 class="display-4 font-weight-bold text-white text-center mb-4">Group Trip Invitations</h1>
 
     @if($invitations->isEmpty())
         <p class="text-center">You have no pending invitations.</p>
