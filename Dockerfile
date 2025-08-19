@@ -1,62 +1,37 @@
-# -------------------------
-# Stage 1: Build PHP backend
-# -------------------------
+# Stage 1: PHP base
 FROM php:8.2-fpm AS php-base
+
+# Set working directory
+WORKDIR /var/www/html
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libpq-dev \
-    libonig-dev \
-    libzip-dev \
-    curl \
     zip \
+    libzip-dev \
+    libonig-dev \
+    curl \
     npm \
-    && docker-php-ext-install pdo pdo_pgsql mbstring zip bcmath
+    nodejs \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip bcmath
 
 # Install Composer
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Copy PHP files
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
+# Copy full Laravel project first (so artisan exists)
 COPY . .
 
-# Generate Laravel key (optional: can also do at runtime)
-# RUN php artisan key:generate
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# -------------------------
-# Stage 2: Build frontend assets
-# -------------------------
-FROM php-base AS node-build
-
-# Install Node dependencies
+# Install Node dependencies & build assets
 RUN npm install
-RUN npm install -D sass-embedded
 RUN npm run build
 
-# -------------------------
-# Stage 3: Final image
-# -------------------------
-FROM php:8.2-fpm
-
-WORKDIR /var/www/html
-
-# Copy backend from php-base
-COPY --from=php-base /var/www/html /var/www/html
-
-# Copy built assets from node-build
-COPY --from=node-build /var/www/html/public/build /var/www/html/public/build
-
-# Set permissions
+# Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 8000 (or Render default)
-EXPOSE 8000
-
-# Start Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Expose port 9000 and start PHP-FPM
+EXPOSE 9000
+CMD ["php-fpm"]
