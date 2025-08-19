@@ -1,56 +1,62 @@
-# ------------------------
-# Stage 1: Build Frontend
-# ------------------------
-FROM node:18 AS frontend
-
-# Set working directory
-WORKDIR /app
-
-# Copy package files and install
-COPY package*.json vite.config.* ./
-RUN npm install
-
-# Copy source files
-COPY resources ./resources
-COPY public ./public
-
-# Build assets
-RUN npm run build
-
-
-# ------------------------
-# Stage 2: Build PHP/Laravel
-# ------------------------
-FROM php:8.2-apache AS backend
+# -------------------------
+# Stage 1: Build PHP backend
+# -------------------------
+FROM php:8.2-fpm AS php-base
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git unzip libpng-dev libonig-dev libxml2-dev zip curl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    git \
+    unzip \
+    libpq-dev \
+    libonig-dev \
+    libzip-dev \
+    curl \
+    zip \
+    npm \
+    && docker-php-ext-install pdo pdo_pgsql mbstring zip bcmath
 
-# Enable Apache rewrite
-RUN a2enmod rewrite
+# Install Composer
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Copy Laravel backend files
+# Copy PHP files
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader
 COPY . .
 
-# Copy frontend build from Stage 1
-COPY --from=frontend /app/public/build ./public/build
+# Generate Laravel key (optional: can also do at runtime)
+# RUN php artisan key:generate
 
-# Install PHP dependencies (optimize for production)
-RUN composer install --no-dev --optimize-autoloader
+# -------------------------
+# Stage 2: Build frontend assets
+# -------------------------
+FROM php-base AS node-build
 
-# Set correct permissions
+# Install Node dependencies
+RUN npm install
+RUN npm install -D sass-embedded
+RUN npm run build
+
+# -------------------------
+# Stage 3: Final image
+# -------------------------
+FROM php:8.2-fpm
+
+WORKDIR /var/www/html
+
+# Copy backend from php-base
+COPY --from=php-base /var/www/html /var/www/html
+
+# Copy built assets from node-build
+COPY --from=node-build /var/www/html/public/build /var/www/html/public/build
+
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose Apache port
-EXPOSE 80
+# Expose port 8000 (or Render default)
+EXPOSE 8000
 
-# Run Apache
-CMD ["apache2-foreground"]
+# Start Laravel
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
