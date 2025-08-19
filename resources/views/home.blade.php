@@ -11,7 +11,7 @@
             <div class="col-md-8">
                 <div class="card shadow-sm" style="background-color: rgba(255,255,255,0.85);">
                     <div class="card-body text-center">
-                        <h2 class="mb-4">Your TravelCom Dashboard</h2>
+                        <h2 class="mb-4" style="color: black;">Your TravelCom Dashboard</h2>
                         <div class="row g-4">
                             <!-- Dashboard Cards -->
                             <div class="col-md-4">
@@ -80,7 +80,9 @@
           <div id="top-banner-{{ $country->id }}" class="banner" style="background-image: url('{{ asset('assets/images/' . $country->image) }}');">
             <div class="banner-inner-wrapper header-text">
               <div class="main-caption">
-                <h2>Take a Glimpse Into The Beautiful Country Of:</h2>
+                <div style="background: rgba(255,255,255,0.85); border-radius: 12px; display: inline-block; padding: 16px 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 18px;">
+                  <h2 style="color: #0d1a4a; margin: 0;">Take a Glimpse Into The Beautiful <span style="color: #0d1a4a;">Country</span> </h2>
+                </div>
                 <h1>{{ $country->name }}</h1>
                 <div class="border-button"><a href="{{ route('travelling.about', $country->id) }}">Go There</a></div>
               </div>
