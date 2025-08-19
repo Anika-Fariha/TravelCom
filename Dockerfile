@@ -1,37 +1,38 @@
-# Stage 1: PHP base
-FROM php:8.2-fpm AS php-base
+# 1️⃣ Use PHP base image with required extensions
+FROM php:8.2-fpm
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Install system dependencies
+# 2️⃣ Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    zip \
     libzip-dev \
-    libonig-dev \
     curl \
     npm \
     nodejs \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip bcmath
+    && docker-php-ext-install pdo_mysql zip
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# 3️⃣ Set working directory
+WORKDIR /var/www/html
 
-# Copy full Laravel project first (so artisan exists)
+# 4️⃣ Copy composer.json and install PHP dependencies
+COPY composer.json composer.lock ./
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-dev --optimize-autoloader
+RUN rm composer-setup.php
+
+# 5️⃣ Copy the rest of the app
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
-
-# Install Node dependencies & build assets
+# 6️⃣ Install Node dependencies
 RUN npm install
+
+# 7️⃣ Build assets (empty CSS now, so safe)
 RUN npm run build
 
-# Set permissions for Laravel
+# 8️⃣ Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 9000 and start PHP-FPM
+# 9️⃣ Expose port 9000 and run PHP-FPM
 EXPOSE 9000
 CMD ["php-fpm"]
