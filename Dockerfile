@@ -1,33 +1,56 @@
-# Stage 1: Build PHP dependencies
-FROM php:8.2-apache as php-base
+# ------------------------
+# Stage 1: Build Frontend
+# ------------------------
+FROM node:18 AS frontend
 
-WORKDIR /var/www/html
+# Set working directory
+WORKDIR /app
 
+# Copy package files and install
+COPY package*.json vite.config.* ./
+RUN npm install
+
+# Copy source files
+COPY resources ./resources
+COPY public ./public
+
+# Build assets
+RUN npm run build
+
+
+# ------------------------
+# Stage 2: Build PHP/Laravel
+# ------------------------
+FROM php:8.2-apache AS backend
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl nodejs npm \
-    && docker-php-ext-install pdo_mysql zip
+    git unzip libpng-dev libonig-dev libxml2-dev zip curl \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
+# Enable Apache rewrite
 RUN a2enmod rewrite
 
+# Set working directory
+WORKDIR /var/www/html
+
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copy Laravel backend files
 COPY . .
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Copy frontend build from Stage 1
+COPY --from=frontend /app/public/build ./public/build
+
+# Install PHP dependencies (optimize for production)
 RUN composer install --no-dev --optimize-autoloader
 
-# Stage 2: Build frontend with Node/Vite
-RUN npm install && npm run build
-
-# Fix permissions
+# Set correct permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Point Apache to Laravel /public
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory /var/www/html/public>\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
-
+# Expose Apache port
 EXPOSE 80
+
+# Run Apache
 CMD ["apache2-foreground"]
