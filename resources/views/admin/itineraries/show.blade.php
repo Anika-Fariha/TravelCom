@@ -1,11 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
-    <h1 class="text-center mb-4">Itinerary Details</h1>
+<style>
+    /* Force white text only inside itinerary details */
+    .itinerary-container, 
+    .itinerary-container * {
+        color: black !important;
+    }
+</style>
+
+<div class="container py-5 itinerary-container">
+    <h1 class="text-center mb-4" style="color: white !important;">Itinerary Details</h1>
 
     <!-- Itinerary Details -->
-    <div class="card">
+    <div class="card bg-white"> {{-- make card background dark so white text is visible --}}
         <div class="card-body">
             <h5 class="card-title">{{ $itinerary->destination }}</h5>
             <p class="card-text"><strong>User:</strong> {{ $itinerary->user->name }}</p>

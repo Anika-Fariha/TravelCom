@@ -28,14 +28,14 @@
         <tbody>
             @foreach($users as $user)
                 <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
+                    <td class="text-white">{{ $user->name }}</td>
+                    <td class="text-white">{{ $user->email }}</td>
                     <td>
                         <!-- Delete User Form -->
                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger text-white">Delete</button>
                         </form>
                     </td>
                 </tr>
