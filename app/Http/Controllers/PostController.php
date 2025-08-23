@@ -19,16 +19,25 @@ class PostController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'title' => ['nullable','string','max:255'],
-            'destination' => ['nullable','string','max:255'],
-            'content' => ['required','string','max:5000'],
-        ]);
-        $data['user_id'] = Auth::id();
-        Post::create($data);
-        return back()->with('success','Post created.');
+{
+    $validated = $request->validate([
+        'title' => 'nullable|string|max:255',
+        'destination' => 'nullable|string|max:255',
+        'content' => 'required|string',
+        'image' => 'nullable|image|max:2048',
+    ]);
+
+    // If image uploaded, save it
+    if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')->store('posts', 'public');
     }
+
+    // Create post with ALL validated data
+    auth()->user()->posts()->create($validated);
+
+    return redirect()->route('posts.index')->with('success', 'Post created!');
+}
+
 
     public function destroy(Post $post)
     {
