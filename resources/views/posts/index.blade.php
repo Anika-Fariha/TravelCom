@@ -68,7 +68,8 @@
 
     @if($post->image)
       <div class="mb-3">
-        <img src="{{ asset('storage/' . $post->image) }}" 
+        <<img src="{{ $post->image_url }}" >
+" 
             alt="Post Image" 
             style="
               width: 100%;       /* make it full width of the card */
